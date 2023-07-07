@@ -1,0 +1,55 @@
+Now you are a fully autonomous drone in gazebo simulator. The simulator contains a drone, and a target object.
+
+The position of drone and target object in 3D environment is denoted as [drone_x, drone_y, drone_z] and [object_x, object_y, object_z]. There is one camera in front of you in order to sense the outside environment. 
+
+The following logical operators, conditions and actions are available. You are not allowed to use any other hypothetical functions.
+
+Logical operators:
+
+Sequence (Represent as “→”): This operator returns SUCCESS if and only if all of its children return SUCCESS. If one of its children return RUNNING or FAILURE, it returns RUNNING or FAILURE and no subsequent children's statuses are checked. 
+
+Selector (Represent as “?”): This node returns FAILURE if and only if all of its children return FAILURE. If one of its children return RUNNING or SUCCESS, it returns RUNNING or SUCCESS and no subsequent children's statuses are checked.
+
+Parallel (Represent as “||”): This node has N children. It returns SUCCESS if M of these children return SUCCESS, for some M ≤ N. It returns FAILURE of N - M + 1 children return FAILURE. Otherwise, it returns RUNNING. And the most important part is, this operator enable all the children concurrently execute in the same time.
+
+The following conditions and actions are available. You are not allowed to use any other hypothetical functions.
+
+Conditions:
+(state_offboard): When the drone is in offboard mode, it means drone is ready to start fully autonomous mission. Return SUCCESS when drone is ready to start autonomous mission, or return FAILURE when drone is controlled manually.
+(reset_drone_finished): Before drone takeoff, you need to check whether the preflight rest is finished or not. Return SUCCESS when the “reset_drone” action is finished, or return FAILURE when it is not being finished.
+(takeoff_finished): When the “waypoint_takeoff” is finished, return SUCCESS. Or return FAILURE when the “waypoint_takeoff” has not finished yet.
+(reach_tracking_pose): According to the camera perception result, return SUCCESS when the distance between drone and target object is smaller than 1 meter (distance = ((drone_x - object_X)^2 + (drone_y - object_y)^2 + (drone_z - object_z)^2)^0.5). Return FAILURE when the distance between drone and target object is bigger than 1 meter.
+(linear_x_in_margin): According to the camera perception result, return SUCCESS when the absolute(drone_x - object_x) is smaller than 0.04 meter. Return FAILURE when the absolute(drone_x - object_x) is bigger than 0.04 meter.
+(linear_y_in_margin): According to the camera perception result, return SUCCESS when the absolute(drone_y - object_y) is smaller than 0.04 meter. Return FAILURE when the absolute(drone_y - object_y) is bigger than 0.04 meter.
+(linear_z_in_margin): According to the camera perception result, return SUCCESS when the absolute(drone_z - object_z) is smaller than 0.04 meter. Return FAILURE when the absolute(drone_z - object_z) is bigger than 0.04 meter.
+
+Actions:
+[reset_drone]: When this action is triggered, reset the preflight state that need to reset before takeoff.
+[waypoint_takeoff]: When this action is triggered, move to the known location that ensure you can sense the target object.
+[waypoint_tracking]: When this action is triggered, move toward the target object position when the target object is inside the camera view.
+[linear_x_control]: When this action is triggered, try to minimize the absolute(drone_x - object_x) when the target object is inside the camera view.
+[linear_y_control]: When this action is triggered, try to minimize the absolute(drone_y - object_y) when the target object is inside the camera view.
+[linear_z_control]: When this action is triggered, try to minimize the absolute(drone_z - object_z) when the target object is inside the camera view.
+[report_error]: When this action is triggered, report to the superviser that you are sure the distance (distance = (drone_x - object_X)^2 + (drone_y - object_y)^2 + (drone_z - object_z)^2)^0.5) is minimized as small as possible.
+
+Here is the example source tasks:
+
+?
+	->
+		(find_turtle)
+		(find_platypus)
+		(find_crocodile)
+	->
+
+		?
+			(camera_find_animal)
+			[navigate_in_default_path]
+		?
+			(reach_animal)
+			[navigate_toward_animal]
+		?
+			(check_animal_type)
+			[alignment_toward_animal]
+
+Now you need to fly to the object as close as possible. 
+Please design a behavior tree for this task, and you can follow the format of source task.

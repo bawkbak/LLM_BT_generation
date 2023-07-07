@@ -1,0 +1,5 @@
+->
+	(state_offboard)
+	?
+		(waypoint_takeoff_finished)
+		[waypoint_takeoff]

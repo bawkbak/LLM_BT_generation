@@ -1,0 +1,11 @@
+?
+	(state_offboard)
+	->
+		?
+			<!>
+				(waypoint_takeoff_finished)
+			[waypoint_takeoff_reset]
+		?
+			<!>
+				(pose_in_margin_finished)
+			[pose_in_margin_reset]

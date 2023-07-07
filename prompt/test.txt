@@ -1,0 +1,32 @@
+Now you are a fully autonomous drone in gazebo simulator. The simulator contains a drone, and a target object.
+
+The position of drone and target object in 3D environment is denoted as [drone_x, drone_y, drone_z] and [object_x, object_y, object_z]. There is one camera in front of you in order to sense the outside environment. 
+
+The following subtrees are available. You are not allowed to use any other hypothetical functions.
+Subtrees:
+“reset_drone”: When this subtree is triggered, reset the preflight state that need to reset before takeoff.
+“waypoint_takeoff”: When this subtree is triggered, move to the known location that ensure you can sense the target object.
+“waypoint_tracking”: When this subtree is triggered, move toward the target object position when the target object is inside the camera view.
+“linear_x_control”: When this subtree is triggered, try to minimize the absolute(drone_x - object_x) when the target object is inside the camera view.
+“linear_y_control”: When this subtree is triggered, try to minimize the absolute(drone_y - object_y) when the target object is inside the camera view.
+“linear_z_control”: When this subtree is triggered, try to minimize the absolute(drone_z - object_z) when the target object is inside the camera view.
+“report_error”: When this subtree is triggered, report current distance (distance = (drone_x - object_X)^2 + (drone_y - object_y)^2 + (drone_z - object_z)^2)^0.5) , and the supervisor will evaulate the performance according to this distance.
+
+Here is the example source tasks:
+
+->
+	->
+		“put_car_at_conveyor”
+		“lift_car”
+	->
+		“pick_wheel”
+		“approach_conveyor”
+		“align_wheel”
+	->
+		"insert_screws”
+		“fasten_screws”
+	->
+		“leave_conveyor”
+
+Now you need to fly to the object as close as possible. 
+Please design a behavior tree for this task, and you can follow the format of source task.
