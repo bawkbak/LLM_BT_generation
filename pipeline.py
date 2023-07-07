@@ -1,7 +1,7 @@
 import openai
 from utils import remove_front_until, find_file, append_tab, subtree_assembly
 
-openai.api_key = "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"
+openai.api_key = "INPUT_KEY"
 
 with open('prompt/test.txt', 'r') as file:
     prompt = file.read().rstrip()
